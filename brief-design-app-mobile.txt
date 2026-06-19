@@ -1,0 +1,369 @@
+================================================================================
+                    BRIEF DESIGN — SIRA APPLICATION MOBILE
+================================================================================
+
+CONTEXTE DU PROJET :
+Sira est une application mobile de santé numérique pour le Bénin. Elle permet 
+aux patients de gérer leur santé depuis leur téléphone : prise de rendez-vous 
+avec des médecins, consultation de leur dossier médical, ordonnances numériques, 
+téléconsultation, suivi de traitements, localisation d'établissements de santé, 
+et paiement en ligne.
+
+L'application s'adresse principalement aux patients béninois. Les médecins 
+ont également un accès limité pour consulter leurs rendez-vous et patients.
+
+Technologie : React Native (Expo)
+Plateformes : iOS et Android
+
+================================================================================
+CHARTE GRAPHIQUE
+================================================================================
+
+Couleurs :
+- Primaire (Vert Santé) : #0FA958 — boutons principaux, éléments actifs, header
+- Secondaire (Jaune/Orange) : #F2A900 — accents, badges, alertes
+- Fond principal : #FFFFFF (blanc)
+- Fond secondaire : #F4F6F8 (gris très clair pour les sections alternées)
+- Texte principal : #1A1A1A (gris anthracite)
+- Texte secondaire : #6B7280 (gris moyen)
+- Danger : #EF4444 (rouge)
+- Succès : #0FA958 (vert)
+- Info : #3B82F6 (bleu)
+
+Typographie :
+- Police : System font (San Francisco sur iOS, Roboto sur Android)
+- Titres : 24px bold
+- Sous-titres : 18px semibold
+- Corps : 15px regular
+- Petits textes : 12px regular
+
+Style visuel :
+- Design iOS/Android natif mais personnalisé avec les couleurs Sira
+- Coins arrondis (12px pour les cartes, 24px pour les boutons)
+- Ombres douces sur les cartes
+- Icônes : style ligne fine (Lucide, Phosphor ou SF Symbols)
+- Pas de glassmorphism — rester propre et accessible
+- Illustrations douces et chaleureuses (style santé/bien-être)
+- Les images doivent représenter des personnes africaines/béninoises
+- Navigation par onglets en bas (Tab Bar)
+
+================================================================================
+NAVIGATION PRINCIPALE (Tab Bar en bas)
+================================================================================
+
+┌──────────────────────────────────────────────────────┐
+│  🏠 Accueil  │  📅 RDV  │  📋 Dossier  │  👤 Profil │
+└──────────────────────────────────────────────────────┘
+
+- 4 onglets principaux
+- Icône + label sous chaque onglet
+- Onglet actif : icône remplie + texte vert (#0FA958)
+- Onglet inactif : icône ligne + texte gris
+
+================================================================================
+ÉCRANS À DESIGNER
+================================================================================
+
+FLUX 0 : ONBOARDING (Première ouverture)
+─────────────────────────────────────────
+
+Écran 0a — Splash Screen :
+- Fond vert (#0FA958) ou blanc
+- Logo Sira centré (grande taille)
+- Animation subtile du logo (pulse ou fade-in)
+
+Écran 0b — Onboarding (3 slides swipables) :
+- Slide 1 : Illustration + "Prenez rendez-vous facilement"
+  - Texte : "Trouvez un médecin et réservez un créneau en quelques clics."
+- Slide 2 : Illustration + "Votre dossier médical sécurisé"
+  - Texte : "Accédez à vos consultations, ordonnances et résultats à tout moment."
+- Slide 3 : Illustration + "Restez en bonne santé"
+  - Texte : "Recevez des rappels pour vos rendez-vous et traitements."
+- Indicateurs de page (3 dots) en bas
+- Bouton "Suivant" sur les 2 premiers, "Commencer" sur le dernier
+- Lien "Passer" en haut à droite
+
+FLUX 1 : AUTHENTIFICATION
+──────────────────────────
+
+Écran 1a — Connexion :
+- Logo Sira en haut (petit)
+- Titre : "Bon retour !" ou "Connectez-vous"
+- Champ : Numéro de téléphone ou Email (avec drapeau Bénin 🇧🇯 si téléphone)
+- Champ : Mot de passe (avec icône œil pour afficher/masquer)
+- Bouton "Se connecter" (vert, pleine largeur, hauteur 50px)
+- Lien "Mot de passe oublié ?"
+- Séparateur "ou"
+- Bouton "Continuer avec Google" (bordure grise, icône Google)
+- En bas : "Pas de compte ? Inscrivez-vous" (lien vert)
+
+Écran 1b — Inscription :
+- Logo Sira en haut
+- Titre : "Créez votre compte"
+- Champs :
+  - Nom complet
+  - Numéro de téléphone (avec drapeau Bénin 🇧🇯 + indicatif +229)
+  - Email
+  - Mot de passe
+  - Confirmer mot de passe
+- Checkbox : "J'accepte les CGU et la politique de confidentialité" (liens cliquables)
+- Bouton "S'inscrire" (vert)
+- En bas : "Déjà un compte ? Connectez-vous"
+
+Écran 1c — Vérification OTP :
+- Titre : "Vérification"
+- Texte : "Nous avons envoyé un code à +229 XX XX XX XX"
+- 4 ou 6 cases pour entrer le code (auto-focus, clavier numérique)
+- Compteur : "Renvoyer le code dans 0:59"
+- Bouton "Vérifier" (vert)
+
+Écran 1d — Compléter le profil :
+- Titre : "Complétez votre profil"
+- Photo de profil (cercle avec icône caméra pour ajouter)
+- Date de naissance (date picker)
+- Sexe (Homme / Femme — boutons radio ou toggle)
+- Groupe sanguin (select : A+, A-, B+, B-, AB+, AB-, O+, O-)
+- Allergies connues (champ texte libre, optionnel)
+- Adresse / Ville
+- Bouton "Terminer" (vert)
+
+FLUX 2 : ACCUEIL (Tab "Accueil")
+──────────────────────────────────
+
+Écran 2a — Page d'accueil :
+- Header :
+  - "Bonjour, Prénom 👋" (aligné à gauche)
+  - Icône cloche de notification (en haut à droite, avec badge rouge)
+- Barre de recherche :
+  - Placeholder : "Rechercher un médecin, une spécialité..."
+  - Fond gris clair, coins arrondis, icône loupe
+- Section "Services" (grille 2x3 d'icônes) :
+  - 🩺 Consultation
+  - 📅 Rendez-vous
+  - 💊 Ordonnances
+  - 🏥 Établissements
+  - 📞 Téléconsultation
+  - 🗂️ Mon dossier
+  - Chaque service : icône dans un cercle coloré + label en dessous
+- Section "Prochain rendez-vous" :
+  - Carte avec : Nom du médecin, Spécialité, Date/Heure, Photo du médecin
+  - Bouton "Voir les détails" ou "Annuler"
+  - Si aucun RDV : carte vide "Aucun rendez-vous à venir" + bouton "Prendre un RDV"
+- Section "Médecins populaires" :
+  - Scroll horizontal de cartes médecins :
+    - Photo ronde, Nom, Spécialité, Note (étoiles), Bouton "Prendre RDV"
+- Section "Articles santé" (optionnel) :
+  - Scroll horizontal de cartes d'articles :
+    - Image, Titre, Résumé (2 lignes), Date
+
+FLUX 3 : PRISE DE RENDEZ-VOUS (Tab "RDV")
+──────────────────────────────────────────
+
+Écran 3a — Liste des rendez-vous :
+- Onglets en haut : "À venir" | "Passés" | "Annulés"
+- Chaque RDV est une carte :
+  - Photo médecin + Nom + Spécialité
+  - Date et heure (formatées : "Mer. 25 Juin, 10:00")
+  - Statut (badge coloré : Confirmé vert / En attente orange / Annulé rouge)
+  - Boutons : "Détails" | "Annuler" (si à venir)
+- Si liste vide : illustration + "Aucun rendez-vous" + bouton "Prendre un RDV"
+- Bouton flottant (FAB) "+" en bas à droite pour créer un nouveau RDV
+
+Écran 3b — Choisir une spécialité :
+- Titre : "Quelle spécialité recherchez-vous ?"
+- Barre de recherche
+- Grille d'icônes/cartes de spécialités :
+  - Médecine générale, Cardiologie, Dermatologie, Pédiatrie, Gynécologie, 
+    Ophtalmologie, ORL, Dentiste, Neurologie, Urologie, etc.
+  - Chaque spécialité : icône + label
+
+Écran 3c — Choisir un médecin :
+- Titre : "Médecins en [Spécialité]"
+- Filtres : Ville, Note, Disponibilité
+- Liste de cartes médecin :
+  - Photo, Nom, Spécialité, Établissement, Note (étoiles), Expérience
+  - Bouton "Prendre RDV"
+  - Indicateur de disponibilité ("Disponible aujourd'hui" en vert)
+
+Écran 3d — Profil du médecin :
+- En-tête : Grande photo + Nom + Spécialité + Note (étoiles) + Nombre d'avis
+- Bio / Description
+- Informations : Établissement, Adresse, Horaires, Langues parlées
+- Section "Avis patients" (liste de témoignages)
+- Bouton fixe en bas : "Prendre rendez-vous" (vert, pleine largeur)
+
+Écran 3e — Choisir date et heure :
+- Calendrier (mois en cours, jours cliquables)
+  - Jours avec créneaux disponibles : en vert
+  - Jours sans créneaux : grisés
+- Sous le calendrier : grille de créneaux horaires disponibles
+  - Ex : "08:00", "08:30", "09:00", "09:30"...
+  - Créneau sélectionné : fond vert + texte blanc
+  - Créneau indisponible : grisé
+- Bouton "Continuer" (vert)
+
+Écran 3f — Confirmation du RDV :
+- Résumé :
+  - Médecin (photo + nom + spécialité)
+  - Date et heure
+  - Établissement + adresse
+  - Motif de la consultation (champ texte)
+- Bouton "Confirmer le rendez-vous" (vert)
+- Texte : "Vous recevrez une notification de confirmation"
+
+Écran 3g — RDV confirmé (succès) :
+- Illustration de succès (checkmark vert animé)
+- "Rendez-vous confirmé !"
+- Résumé rapide (médecin, date, heure)
+- Boutons : "Voir mes rendez-vous" | "Retour à l'accueil"
+
+FLUX 4 : DOSSIER MÉDICAL (Tab "Dossier")
+─────────────────────────────────────────
+
+Écran 4a — Mon dossier médical :
+- En-tête : "Mon dossier médical"
+- Carte profil rapide : Avatar + Nom + Âge + Groupe sanguin + Allergies
+- Section "Consultations récentes" :
+  - Timeline verticale (date à gauche, contenu à droite)
+  - Chaque entrée : Date, Médecin, Diagnostic, Traitement prescrit
+  - Clic → détail consultation
+- Section "Mes ordonnances" :
+  - Liste de cartes : Date, Médecin, Nombre de médicaments, Bouton "Voir"
+- Section "Mes documents" :
+  - Liste de fichiers : Icône type + Nom + Date + Bouton "Ouvrir/Télécharger"
+  - Bouton "Ajouter un document" (upload depuis la galerie ou l'appareil photo)
+
+Écran 4b — Détail d'une consultation :
+- Date et heure
+- Médecin (photo + nom + spécialité)
+- Motif de la consultation
+- Diagnostic
+- Notes du médecin
+- Ordonnance associée (lien)
+- Documents associés (liste de fichiers)
+
+Écran 4c — Détail d'une ordonnance :
+- En-tête : Date + Médecin
+- Liste des médicaments prescrits :
+  - Nom du médicament
+  - Dosage
+  - Fréquence (ex : "2 fois par jour")
+  - Durée (ex : "7 jours")
+  - Instructions spéciales
+- Bouton "Télécharger en PDF"
+- Bouton "Partager" (envoyer par WhatsApp ou email)
+
+FLUX 5 : PROFIL UTILISATEUR (Tab "Profil")
+───────────────────────────────────────────
+
+Écran 5a — Mon profil :
+- Photo de profil (modifiable, avec icône caméra)
+- Nom complet
+- Liste de menus (style liste iOS) :
+  - 📝 Informations personnelles
+  - 🔒 Sécurité (changer mot de passe)
+  - 💳 Mes paiements
+  - 🔔 Paramètres de notification
+  - 🌍 Langue (Français / Anglais)
+  - 📄 CGU et Politique de confidentialité
+  - ❓ Aide et Support
+  - 🚪 Déconnexion (texte rouge)
+- Version de l'app en bas (petit texte gris)
+
+Écran 5b — Informations personnelles :
+- Formulaire modifiable :
+  - Photo, Nom, Prénom, Date de naissance, Sexe, Téléphone, Email, 
+    Adresse, Groupe sanguin, Allergies
+- Bouton "Enregistrer les modifications" (vert)
+
+Écran 5c — Mes paiements :
+- Historique des paiements (liste) :
+  - Montant, Description, Date, Statut (badge)
+- Méthodes de paiement enregistrées (section)
+
+FLUX 6 : NOTIFICATIONS
+───────────────────────
+
+Écran 6a — Liste des notifications :
+- Titre : "Notifications"
+- Bouton "Tout marquer comme lu"
+- Liste groupée par date ("Aujourd'hui", "Hier", "Cette semaine") :
+  - Chaque notification :
+    - Icône type (cloche, calendrier, médicament, alerte)
+    - Titre en gras
+    - Message (2 lignes max, tronqué)
+    - Heure relative ("il y a 2h")
+    - Point bleu si non lu
+- Si vide : illustration + "Aucune notification"
+
+FLUX 7 : RECHERCHE
+───────────────────
+
+Écran 7a — Recherche :
+- Grande barre de recherche en haut (auto-focus, clavier ouvert)
+- Recherches récentes (historique)
+- Résultats en temps réel :
+  - Section "Médecins" (cards)
+  - Section "Spécialités" (chips)
+  - Section "Établissements" (cards)
+
+FLUX 8 : LOCALISATION D'ÉTABLISSEMENTS
+───────────────────────────────────────
+
+Écran 8a — Carte des établissements :
+- Carte plein écran (Google Maps ou Mapbox) avec marqueurs
+  - Marqueurs colorés par type (Hôpital = rouge, Clinique = bleu, 
+    Pharmacie = vert, Centre = orange)
+- Bottom sheet (tiroir du bas, draggable) :
+  - Liste des établissements les plus proches
+  - Chaque établissement : Nom, Type, Distance, Adresse, Note
+  - Clic → fiche détaillée
+
+Écran 8b — Détail d'un établissement :
+- Photo/Image de l'établissement
+- Nom, Type, Adresse
+- Téléphone (cliquable pour appeler)
+- Horaires d'ouverture
+- Liste des médecins de l'établissement
+- Bouton "Itinéraire" (ouvre Google Maps / Apple Plans)
+- Bouton "Prendre RDV dans cet établissement"
+
+================================================================================
+CONSIGNES IMPORTANTES POUR LE DESIGN
+================================================================================
+
+1. L'app doit être SIMPLE et INTUITIVE — la cible inclut des personnes 
+   pas forcément à l'aise avec la technologie
+2. Gros boutons et zones de tap (minimum 44px de hauteur)
+3. Textes lisibles (minimum 14px pour le corps)
+4. Utiliser les conventions iOS ET Android (design adaptatif)
+5. Les illustrations doivent représenter des personnes africaines/béninoises
+6. Prioriser le parcours principal : Accueil → Choisir spécialité → Choisir 
+   médecin → Choisir date → Confirmer RDV
+7. L'app doit fonctionner même avec une connexion lente (prévoir des états 
+   de chargement : skeletons, spinners)
+8. Penser au mode hors-ligne pour le dossier médical (accès en lecture)
+9. La monnaie affichée est le FCFA (Franc CFA)
+10. Le numéro de téléphone est au format béninois (+229)
+
+================================================================================
+ÉTATS À DESIGNER (pour chaque écran)
+================================================================================
+
+- État normal (avec données)
+- État vide (aucune donnée — illustration + message + CTA)
+- État de chargement (skeleton loader ou spinner)
+- État d'erreur (message + bouton "Réessayer")
+
+================================================================================
+LIVRABLES ATTENDUS
+================================================================================
+
+- Maquette haute fidélité de CHAQUE écran listé ci-dessus
+- Version iOS (390px) et Android (360px)
+- Design du splash screen
+- Design des 3 slides d'onboarding
+- Design de tous les états (vide, chargement, erreur)
+- Design des bottom sheets et modales
+- Prototype interactif avec les flux de navigation
+- Tous les composants : boutons, inputs, cartes, badges, tab bar
