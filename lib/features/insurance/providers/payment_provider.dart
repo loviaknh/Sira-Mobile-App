@@ -23,14 +23,16 @@ class PaymentStateData {
   }
 }
 
-class PaymentNotifier extends StateNotifier<PaymentStateData> {
-  final PaymentRepository repository;
-  
-  PaymentNotifier(this.repository) : super(PaymentStateData());
+class PaymentNotifier extends Notifier<PaymentStateData> {
+  @override
+  PaymentStateData build() {
+    return PaymentStateData();
+  }
 
   Future<void> initiatePayment({required double amount, required String method}) async {
     state = state.copyWith(state: PaymentState.initializing);
     try {
+      final repository = ref.read(paymentRepositoryProvider);
       final res = await repository.initializePayment(amount: amount, method: method, description: "Cotisation Mutuelle");
       state = state.copyWith(state: PaymentState.awaitingPin, paymentId: res['paymentId']);
     } catch (e) {
@@ -42,12 +44,9 @@ class PaymentNotifier extends StateNotifier<PaymentStateData> {
     if (state.paymentId == null) return;
     state = state.copyWith(state: PaymentState.processing);
     try {
-      // Simulation delay for MTN MoMo
+      final repository = ref.read(paymentRepositoryProvider);
       await Future.delayed(const Duration(seconds: 2));
-      
       await repository.confirmPayment(state.paymentId!);
-      
-      // Fetch receipt
       final receipt = await repository.getReceipt(state.paymentId!);
       state = state.copyWith(state: PaymentState.success, receipt: receipt);
     } catch (e) {
@@ -59,6 +58,7 @@ class PaymentNotifier extends StateNotifier<PaymentStateData> {
     if (state.paymentId == null) return;
     state = state.copyWith(state: PaymentState.processing);
     try {
+      final repository = ref.read(paymentRepositoryProvider);
       await repository.cancelPayment(state.paymentId!);
       state = state.copyWith(state: PaymentState.cancelled);
     } catch (e) {
@@ -71,9 +71,7 @@ class PaymentNotifier extends StateNotifier<PaymentStateData> {
   }
 }
 
-final paymentProvider = StateNotifierProvider<PaymentNotifier, PaymentStateData>((ref) {
-  return PaymentNotifier(ref.watch(paymentRepositoryProvider));
-});
+final paymentProvider = NotifierProvider<PaymentNotifier, PaymentStateData>(PaymentNotifier.new);
 
 final paymentHistoryProvider = FutureProvider<List<dynamic>>((ref) async {
   final repository = ref.watch(paymentRepositoryProvider);

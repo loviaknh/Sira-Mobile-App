@@ -83,6 +83,22 @@ class HomeScreen extends StatelessWidget {
                 _buildServiceIcon(Icons.folder_shared, 'Dossier médical'),
                 _buildServiceIcon(Icons.medication, 'Ordonnances'),
               ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildServiceIcon(IconData icon, String label) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
             boxShadow: [
               BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
             ],

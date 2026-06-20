@@ -5,15 +5,18 @@ final sosRepositoryProvider = Provider((ref) => SosRepository());
 
 enum SosState { inactive, loading, sent, error }
 
-class SosNotifier extends StateNotifier<SosState> {
-  final SosRepository repository;
+class SosNotifier extends Notifier<SosState> {
   String? errorMessage;
   
-  SosNotifier(this.repository) : super(SosState.inactive);
+  @override
+  SosState build() {
+    return SosState.inactive;
+  }
 
   Future<void> triggerSos() async {
     state = SosState.loading;
     try {
+      final repository = ref.read(sosRepositoryProvider);
       // Coordonnées GPS simulées (Cotonou) pour la phase 15
       await repository.createAlert(latitude: 6.3703, longitude: 2.3912, emergencyType: 'URGENCE_MEDICALE');
       state = SosState.sent;
@@ -29,9 +32,7 @@ class SosNotifier extends StateNotifier<SosState> {
   }
 }
 
-final sosProvider = StateNotifierProvider<SosNotifier, SosState>((ref) {
-  return SosNotifier(ref.watch(sosRepositoryProvider));
-});
+final sosProvider = NotifierProvider<SosNotifier, SosState>(SosNotifier.new);
 
 final currentAlertProvider = FutureProvider<Map<String, dynamic>>((ref) async {
   final repository = ref.watch(sosRepositoryProvider);

@@ -99,7 +99,7 @@ class AppTheme {
           ),
         ),
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: Colors.white,
         elevation: 4, // Ombres très douces
         shadowColor: Colors.black.withOpacity(0.04),

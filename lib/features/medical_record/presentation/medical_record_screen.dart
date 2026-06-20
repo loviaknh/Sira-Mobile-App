@@ -85,14 +85,15 @@ class MedicalRecordScreen extends ConsumerWidget {
   Widget _buildRecordCard(BuildContext context, IconData icon, String title, String subtitle, Color color, String route) {
     return GestureDetector(
       onTap: () => context.push(route),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
-        ],
-      ),
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          ],
+        ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -110,6 +111,7 @@ class MedicalRecordScreen extends ConsumerWidget {
           const SizedBox(height: 4),
           Text(subtitle, style: Theme.of(context).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary)),
         ],
+      ),
       ),
     );
   }

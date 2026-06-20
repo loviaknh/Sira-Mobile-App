@@ -3,6 +3,7 @@ import '../../home/presentation/home_screen.dart';
 import '../../appointments/presentation/appointments_screen.dart';
 import '../../medical_record/presentation/medical_record_screen.dart';
 import '../../profile/presentation/profile_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class MainLayout extends StatefulWidget {
   const MainLayout({super.key});
