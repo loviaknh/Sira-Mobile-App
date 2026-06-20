@@ -3,8 +3,21 @@ import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
 
-class NpiInputScreen extends StatelessWidget {
+class NpiInputScreen extends StatefulWidget {
   const NpiInputScreen({super.key});
+
+  @override
+  State<NpiInputScreen> createState() => _NpiInputScreenState();
+}
+
+class _NpiInputScreenState extends State<NpiInputScreen> {
+  final _nipController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nipController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +50,7 @@ class NpiInputScreen extends StatelessWidget {
               const SizedBox(height: 48),
               FormBuilderTextField(
                 name: 'npi',
+                controller: _nipController,
                 keyboardType: TextInputType.number,
                 style: const TextStyle(fontSize: 24, letterSpacing: 4),
                 decoration: const InputDecoration(
@@ -60,7 +74,16 @@ class NpiInputScreen extends StatelessWidget {
               ),
               const Spacer(),
               ElevatedButton(
-                onPressed: () => context.push('/kyc/npi-verify'),
+                onPressed: () {
+                  final nip = _nipController.text.trim();
+                  if (nip.isNotEmpty) {
+                    context.push('/kyc/npi-verify', extra: nip);
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Veuillez entrer votre NPI')),
+                    );
+                  }
+                },
                 child: const Text('Continuer'),
               ),
             ],

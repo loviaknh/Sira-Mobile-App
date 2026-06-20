@@ -89,7 +89,7 @@ class AppRouter {
       GoRoute(
         path: '/kyc/npi-verify',
         name: 'npi_verify',
-        builder: (context, state) => const NpiVerificationScreen(),
+        builder: (context, state) => NpiVerificationScreen(nip: state.extra as String?),
       ),
       GoRoute(
         path: '/kyc/id-scan',

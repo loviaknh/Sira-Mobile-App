@@ -4,10 +4,12 @@ import 'package:flutter/foundation.dart';
 
 class ApiClient {
   static final Dio _dio = Dio(BaseOptions(
-    // En développement, 10.0.2.2 est l'alias localhost pour l'émulateur Android.
-    // IMPORTANT : Si vous testez sur un vrai téléphone physique en Wi-Fi, 
-    // remplacez 10.0.2.2 par l'adresse IP locale de votre ordinateur (ex: 192.168.1.X:3000)
-    baseUrl: kDebugMode ? 'http://10.0.2.2:3000' : 'https://api.sira.bj',
+    // En développement via CÂBLE USB physique :
+    // Utilisez 'http://127.0.0.1:3000' ET exécutez la commande suivante dans votre terminal PC :
+    // adb reverse tcp:3000 tcp:3000
+    //
+    // En production : l'API sera hébergée sur Render (ex: https://sira-backend-api.onrender.com)
+    baseUrl: kDebugMode ? 'http://127.0.0.1:3000' : 'https://sira-backend-api.onrender.com',
     connectTimeout: const Duration(seconds: 10),
     receiveTimeout: const Duration(seconds: 10),
     headers: {
