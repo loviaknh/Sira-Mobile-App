@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:go_router/go_router.dart';
 import '../../../core/theme/app_colors.dart';
+import '../../auth/data/auth_repository.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -11,107 +11,69 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  final _formKey = GlobalKey<FormBuilderState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _nomController = TextEditingController();
+  final _prenomController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _authRepo = AuthRepository();
+  bool _isLoading = false;
+
+  Future<void> _register() async {
+    if (_emailController.text.isEmpty || _passwordController.text.isEmpty) return;
+    setState(() => _isLoading = true);
+    try {
+      await _authRepo.registerWithEmail(_emailController.text, _passwordController.text);
+      await _authRepo.syncUserWithBackend(
+        nom: _nomController.text,
+        prenom: _prenomController.text,
+        telephone: _phoneController.text,
+      );
+      if (mounted) context.push('/otp');
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Erreur: ${e.toString()}')));
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: AppColors.textMain),
-          onPressed: () => context.pop(),
-        ),
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Text(
-                'Créer votre compte',
-                style: Theme.of(context).textTheme.displaySmall,
+      backgroundColor: AppColors.backgroundPrimary,
+      appBar: AppBar(backgroundColor: Colors.transparent, elevation: 0, iconTheme: const IconThemeData(color: Colors.black)),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(24.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Text('Créer un compte', style: TextStyle(fontSize: 32, fontWeight: FontWeight.bold, color: AppColors.primary)),
+            const SizedBox(height: 32),
+            TextField(controller: _nomController, decoration: InputDecoration(labelText: 'Nom', prefixIcon: const Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)))),
+            const SizedBox(height: 16),
+            TextField(controller: _prenomController, decoration: InputDecoration(labelText: 'Prénoms', prefixIcon: const Icon(Icons.person), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)))),
+            const SizedBox(height: 16),
+            TextField(controller: _phoneController, decoration: InputDecoration(labelText: 'Téléphone', prefixIcon: const Icon(Icons.phone), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)))),
+            const SizedBox(height: 16),
+            TextField(controller: _emailController, decoration: InputDecoration(labelText: 'Email', prefixIcon: const Icon(Icons.email), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)))),
+            const SizedBox(height: 16),
+            TextField(controller: _passwordController, obscureText: true, decoration: InputDecoration(labelText: 'Mot de passe', prefixIcon: const Icon(Icons.lock), border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)))),
+            const SizedBox(height: 32),
+            ElevatedButton(
+              onPressed: _isLoading ? null : _register,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColors.primary,
+                foregroundColor: Colors.white,
+                padding: const EdgeInsets.symmetric(vertical: 16),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
               ),
-              const SizedBox(height: 8),
-              Text(
-                'Rejoignez Sira et gérez votre santé et celle de votre famille.',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
-                    ),
-              ),
-              const SizedBox(height: 40),
-
-              FormBuilder(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text('Nom complet', style: Theme.of(context).textTheme.labelMedium),
-                    const SizedBox(height: 8),
-                    FormBuilderTextField(
-                      name: 'name',
-                      decoration: const InputDecoration(
-                        hintText: 'Ex: Ahouefa H.',
-                        prefixIcon: Icon(Icons.person_outline),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text('Téléphone', style: Theme.of(context).textTheme.labelMedium),
-                    const SizedBox(height: 8),
-                    FormBuilderTextField(
-                      name: 'phone',
-                      keyboardType: TextInputType.phone,
-                      decoration: const InputDecoration(
-                        hintText: '+229 01 23 45 67 89',
-                        prefixIcon: Icon(Icons.phone_outlined),
-                      ),
-                    ),
-                    const SizedBox(height: 24),
-                    Text('Email (Optionnel)', style: Theme.of(context).textTheme.labelMedium),
-                    const SizedBox(height: 8),
-                    FormBuilderTextField(
-                      name: 'email',
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: const InputDecoration(
-                        hintText: 'ahouefa@exemple.com',
-                        prefixIcon: Icon(Icons.email_outlined),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              const SizedBox(height: 48),
-
-              ElevatedButton(
-                onPressed: () {
-                  context.push('/otp');
-                },
-                child: const Text('Créer mon compte'),
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Déjà un compte ? ', style: Theme.of(context).textTheme.bodyMedium),
-                  GestureDetector(
-                    onTap: () {
-                      context.pop();
-                    },
-                    child: Text(
-                      'Se connecter',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w600,
-                          ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
+              child: _isLoading 
+                  ? const CircularProgressIndicator(color: Colors.white)
+                  : const Text('S\'inscrire', style: TextStyle(fontSize: 18)),
+            ),
+          ],
         ),
       ),
     );
